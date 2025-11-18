@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Панель родителя</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="parent-page">
+        <header class="parent-header">
+        <button class="btn-back" onclick="goHome()"><<</button>
+        <div class="header-status">
+            <div class="status-item">
+                <span class="status-label">Задания на проверке:</span>
+                <span class="status-value" id="reviewCount">0</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Ребенок:</span>
+                <span class="status-value online" id="childStatus">Онлайн</span>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-settings" onclick="openParentSettings()">⚙️</button>
+        </div>
+        </header>
+
+        <main class="parent-main">
+            <section class="tasks-section">
+                <h2 class="section-title">Задания на проверке</h2>
+                <div class="tasks-list" id="parentReviewTasks"></div>
+            </section>
+
+            <section class="tasks-section">
+                <h2 class="section-title">Текущие задания</h2>
+                <div class="tasks-list" id="parentCurrentTasks"></div>
+            </section>
+
+            <section class="tasks-section">
+            <h2 class="section-title">Выполненные</h2>
+            <div class="tasks-list" id="parentCompletedTasks"></div>
+            <button id="parentLoadMoreBtn" onclick="showMoreParentTasks()" class="load-more-btn" style="display: none;">
+              📥 Загрузить еще задания
+            </button>
+            </section>
+
+            <section class="stats-section">
+                <h2 class="section-title">Статистика ребенка</h2>
+                <div class="cookie-jar-container">
+                    <div class="cookie-jar">
+                        <div class="cookie-jar-fill" id="parentCookieJarFill" style="height: 0%;"></div>
+                    </div>
+                    <div class="cookie-jar-label">Банка с печеньем 🍪</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="parentTotalCompleted">0</div>
+                        <div class="stat-label">Выполнено</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="parentTotalPoints">0</div>
+                        <div class="stat-label">Баллов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="parentCurrentLevel">1</div>
+                        <div class="stat-label">Уровень</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <button class="floating-btn" onclick="openAddTaskModal()">+</button>
+    </div>
+
+    <!-- Модальное окно добавления задания -->
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddTaskModal()">&times;</span>
+            <h2>Добавить задание</h2>
+            <div class="task-form">
+                <label>Название задания:</label>
+                <input type="text" id="newTaskTitle" class="input-field" placeholder="Например: Прочитать рассказ">
+                <label>Описание:</label>
+                <textarea id="newTaskDescription" class="input-field" rows="4" placeholder="Описание задания..."></textarea>
+                <label>Дата выполнения:</label>
+                <input type="date" id="newTaskDate" class="input-field">
+                <label>Баллы за выполнение:</label>
+                <input type="number" id="newTaskPoints" class="input-field" value="10" min="1">
+                <button onclick="addTask()" class="btn-primary">Создать задание</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно проверки задания -->
+    <div id="reviewTaskModal" class="modal">
+        <div class="modal-content task-modal-content">
+            <span class="close" onclick="closeReviewModal()">&times;</span>
+            <h2 id="reviewTaskTitle">Проверка задания</h2>
+            <div class="task-description" id="reviewTaskDescription"></div>
+            <div class="task-answer-review">
+                <h3>Ответ ребенка:</h3>
+                <div class="answer-text" id="reviewAnswerText"></div>
+                <div id="reviewAttachment" class="review-attachment"></div>
+            </div>
+            <div class="review-comment-section" id="reviewCommentSection" style="display: none;">
+                <label>Комментарий для ребенка (что нужно доработать):</label>
+                <textarea id="reviewComment" class="input-field" rows="3" placeholder="Напишите, что нужно исправить..."></textarea>
+            </div>
+            <div class="review-actions">
+                <button class="btn-reject" onclick="showRejectComment()">Вернуть на доработку</button>
+                <button class="btn-approve" onclick="approveTask()">Принять</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования задания -->
+    <div id="editTaskModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditTaskModal()">&times;</span>
+            <h2>Редактировать задание</h2>
+            <div class="task-form">
+                <label>Название задания:</label>
+                <input type="text" id="editTaskTitle" class="input-field" placeholder="Например: Прочитать рассказ">
+                <label>Описание:</label>
+                <textarea id="editTaskDescription" class="input-field" rows="4" placeholder="Описание задания..."></textarea>
+                <label>Дата выполнения:</label>
+                <input type="date" id="editTaskDate" class="input-field">
+                <label>Баллы за выполнение:</label>
+                <input type="number" id="editTaskPoints" class="input-field" value="10" min="1">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="saveEditedTask()" class="btn-primary" style="flex: 1;">Сохранить</button>
+                    <button onclick="deleteTask()" class="btn-reject" style="flex: 1;">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div id="parentSettingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeParentSettingsModal()">&times;</span>
+            <h2>Настройки</h2>
+            <div class="settings-form">
+                <label>Новый пароль:</label>
+                <input type="password" id="newPassword" class="input-field" placeholder="Введите новый пароль">
+                <button onclick="saveParentSettings()" class="btn-primary">Сохранить пароль</button>
+                <div class="reset-section" style="margin: 20px 0; padding: 15px; background: var(--sticky-pink); border-radius: 10px; border: 2px solid var(--wood-border);">
+                    <h3 style="margin-bottom: 15px; color: var(--text-dark);">Сброс статистики ребенка</h3>
+                    
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <button onclick="resetChildPoints()" class="btn-reject" style="flex: 1;">
+                            🎯 Сбросить очки
+                        </button>
+                        <button onclick="resetChildLevel()" class="btn-reject" style="flex: 1;">
+                            📊 Сбросить уровень
+                        </button>
+                    </div>
+                    
+                    <button onclick="resetChildStats()" class="btn-reject" style="width: 100%; margin-top: 10px;">
+                        🗑️ Полный сброс статистики
+                    </button>
+                    
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 10px;">
+                        Текущие: Уровень ${appData.child.level}, ${appData.child.points} очков
+                    </div>
+                </div>
+                <button type="button" onclick="cleanupStorage()" class="btn-reject" style="margin-top: 10px;">
+                    🗑️ Очистить старые вложения
+                </button>
+                <button class="btn-logout" onclick="logout()" title="Выйти">🚪Выход</button>
+            </div>
+        </div>
+    </div>
+  
+ <script>
+    // Защита родительской страницы - требует пароль
+    document.addEventListener('DOMContentLoaded', function() {
+        protectPage('parent');
+    });
+</script>
+  
+   <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    
+    <!-- Твои файлы Firebase -->
+    <script src="/firebase-config.js"></script>
+    <script src="/firebase-app.js"></script>
+    <script src="/script.js"></script>
+    
+</body>
+</html>
