@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Мои задания</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="child-page">
+        <header class="child-header">
+            <button class="btn-logout" onclick="logout()" title="Выйти">🚪</button>
+            <!-- <button class="btn-back" onclick="goHome()"><<</button> -->
+            <div class="header-info">
+                <div class="avatar-container">
+                    <img src="" alt="Аватар" id="childAvatar" class="avatar" style="display: none;">
+                    <div class="avatar-fallback" id="avatarFallback" style="display: none;">👤</div>
+                </div>
+                <div class="child-info">
+                    <div class="child-name" id="childName">Ребенок</div>
+                    <div class="child-level">Ур.<span id="childLevel">1</span></div>
+                </div>
+                <div class="header-badges">
+                    <div class="new-tasks-badge" id="newTasksBadge" style="display: none;">
+                        <span id="newTasksCount">0</span><br>новых
+                    </div>
+                </div>
+            </div>
+            <button class="btn-settings" onclick="openChildSettings()">⚙️</button>
+        </header>
+
+        <main class="child-main">
+            <section class="tasks-section">
+                <h2 class="section-title">Текущие задания</h2>
+                <div class="tasks-list" id="currentTasks"></div>
+            </section>
+
+            <section class="tasks-section">
+                <h2 class="section-title">На проверке</h2>
+                <div class="tasks-list" id="reviewTasks"></div>
+            </section>
+
+           <section class="tasks-section">
+            <h2 class="section-title">Выполненные</h2>
+            <div class="tasks-list" id="completedTasks"></div>
+            <button id="loadMoreBtn" onclick="showMoreTasks()" class="load-more-btn" style="display: none;">
+                📥 Загрузить еще задания
+            </button>
+            </section>
+
+            <section class="stats-section">
+                <h2 class="section-title">Статистика</h2>
+                <div class="cookie-jar-container">
+                    <div class="cookie-jar">
+                        <div class="cookie-jar-fill" id="cookieJarFill" style="height: 0%;"></div>
+                    </div>
+                    <div class="cookie-jar-label">Моя банка с печеньем 🍪</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalCompleted">0</div>
+                        <div class="stat-label">Выполнено</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalPoints">0</div>
+                        <div class="stat-label">Баллов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentLevel">1</div>
+                        <div class="stat-label">Уровень</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Модальное окно задания -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content task-modal-content">
+            <span class="close" onclick="closeTaskModal()">&times;</span>
+            <h2 id="taskModalTitle">Задание</h2>
+            <div class="task-description" id="taskModalDescription"></div>
+            <div class="task-date" id="taskModalDate"></div>
+            <div class="task-answer-section">
+                <div id="parentCommentDisplay" style="display: none;"></div>
+                <label>Твой ответ:</label>
+                <textarea id="taskAnswer" placeholder="Напиши свой ответ здесь..." class="answer-textarea"></textarea>
+                <div class="attachment-section">
+                    <input type="file" id="taskAttachment" accept="image/*,video/*" style="display: none;" onchange="handleAttachment(this)" multiple>
+                    <button class="btn-attach" onclick="document.getElementById('taskAttachment').click()">
+                        📎 Прикрепить фото/видео
+                    </button>
+                    <div class="attachment-info" style="font-size: 12px; color: var(--text-light); margin-top: 5px;">
+                        Можно выбрать до 5 файлов, не более 5 МБ каждый
+                    </div>
+                    <div id="attachmentPreview" class="attachment-preview"></div>
+                </div>
+                <div class="voice-recording-section" style="margin: 15px 0;">
+                    <button id="recordButton" class="btn-attach" style="background: var(--sticky-pink);";>
+                        🎤 Записать голосовое сообщение
+                    </button>
+                    <button id="stopButton" class="btn-attach" style="background: var(--bg-terracotta); color: white; display: none;">
+                        ⏹️ Остановить запись
+                    </button>
+                    <div id="recordingTimer" style="display: none; text-align: center; margin: 10px 0; font-weight: bold; color: var(--text-dark);">
+                        ⏱️ Запись: <span id="timerDisplay">0:00</span>
+                    </div>
+                    <div class="recording-info" style="font-size: 12px; color: var(--text-light); margin-top: 5px;">
+                        Максимальная длина записи: 2 минуты
+                    </div>
+                    <div id="voicePreview" class="attachment-preview"></div>
+                </div>
+                <button class="btn-submit" style="margin-top: 30px;" onclick="submitTask()">Отправить на проверку</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSettingsModal()">&times;</span>
+            <h2>Настройки</h2>
+            <div class="settings-form">
+                <label>Имя:</label>
+                <input type="text" id="settingsName" class="input-field">
+                <label>Аватар:</label>
+                <div class="avatar-upload-section">
+                    <div class="avatar-preview-container">
+                        <img id="avatarPreview" src="" alt="Превью аватарки" class="avatar-preview-img">
+                        <div class="avatar-preview-placeholder" id="avatarPreviewPlaceholder">👤</div>
+                    </div>
+                    <div class="avatar-upload-buttons">
+                        <input type="file" id="avatarFileInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(this)">
+                        <button type="button" onclick="document.getElementById('avatarFileInput').click()" class="btn-upload-avatar">
+                            📷 Загрузить с устройства
+                        </button>
+                        <label style="margin-top: 10px; display: block; font-size: 14px; color: var(--text-light);">или</label>
+                        <input type="text" id="settingsAvatar" class="input-field" placeholder="Введите URL изображения" style="margin-top: 10px;">
+                        <button type="button" onclick="loadAvatarFromUrl()" class="btn-load-url" style="margin-top: 10px;">
+                            Загрузить по URL
+                        </button>
+                    </div>
+                </div>
+                <button onclick="saveChildSettings()" class="btn-primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+  
+  <script>
+    // Защита детской страницы - разрешаем всем
+    document.addEventListener('DOMContentLoaded', function() {
+        protectPage('child');
+    });
+</script>
+  
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    
+    <!-- Твои файлы Firebase -->
+    <script src="/firebase-config.js"></script>
+    <script src="/firebase-app.js"></script>
+    <script src="/script.js"></script>
+</body>
+</html>
