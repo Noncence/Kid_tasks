@@ -1,39 +1,28 @@
 // ==================== FIREBASE CONFIGURATION ====================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-    getAuth, 
-    signInAnonymously,
-    onAuthStateChanged 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { 
-    getFirestore, 
-    doc, 
-    getDoc, 
-    setDoc 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-// Firebase автоматически находит конфигурацию при деплое на Firebase Hosting
-const app = initializeApp({
-    // Конфигурация будет автоматически подгружена Firebase Hosting
+// ==================== FIREBASE CONFIGURATION ====================
+// Используем глобальные переменные Firebase из CDN
+const app = firebase.initializeApp({
+    // Пустая конфигурация - Firebase Hosting подставит автоматически
 });
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+const auth = firebase.auth();
+const db = firebase.firestore();
 let currentUser = null;
 
-// Остальные Firebase функции остаются без изменений...
+// Firebase functions
 async function initFirebase() {
     return new Promise((resolve, reject) => {
         console.log('🔄 Инициализация Firebase...');
         
-        onAuthStateChanged(auth, async (user) => {
+        firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
                 console.log('✅ Пользователь аутентифицирован:', user.uid);
                 resolve(true);
             } else {
                 try {
-                    const userCredential = await signInAnonymously(auth);
+                    const userCredential = await firebase.auth().signInAnonymously();
                     currentUser = userCredential.user;
                     console.log('✅ Анонимный пользователь создан:', currentUser.uid);
                     resolve(true);
@@ -44,6 +33,50 @@ async function initFirebase() {
             }
         });
     });
+}
+
+async function loadUserData(userId) {
+    try {
+        console.log('📥 Загрузка данных из Firebase...');
+        const userDoc = await db.collection("users").doc(userId).get();
+        
+        if (userDoc.exists()) {
+            console.log('✅ Данные загружены из Firebase');
+            return userDoc.data();
+        } else {
+            console.log('📝 Данных в Firebase нет, создаем новые');
+            const initialData = {
+                parentPassword: '1234',
+                child: {
+                    name: 'Ребенок',
+                    avatar: 'https://via.placeholder.com/150/6C5CE7/FFFFFF?text=👶',
+                    level: 1,
+                    points: 0,
+                    isOnline: true,
+                    levelUpNotification: false
+                },
+                tasks: []
+            };
+            
+            await db.collection("users").doc(userId).set(initialData);
+            return initialData;
+        }
+    } catch (error) {
+        console.error('❌ Ошибка загрузки данных:', error);
+        return null;
+    }
+}
+
+async function saveUserData(userId, data) {
+    try {
+        console.log('💾 Сохранение данных в Firebase...');
+        await db.collection("users").doc(userId).set(data);
+        console.log('✅ Данные сохранены в Firebase');
+        return true;
+    } catch (error) {
+        console.error('❌ Ошибка сохранения:', error);
+        return false;
+    }
 }
 
 // Локальное хранилище данных
@@ -2069,3 +2102,4 @@ async function checkFirebaseSetup() {
 
 
 console.log('Script.js загружен успешно');
+
