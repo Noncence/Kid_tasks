@@ -1,3 +1,51 @@
+// ==================== FIREBASE CONFIGURATION ====================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+    getAuth, 
+    signInAnonymously,
+    onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    setDoc 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// Firebase автоматически находит конфигурацию при деплое на Firebase Hosting
+const app = initializeApp({
+    // Конфигурация будет автоматически подгружена Firebase Hosting
+});
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+let currentUser = null;
+
+// Остальные Firebase функции остаются без изменений...
+async function initFirebase() {
+    return new Promise((resolve, reject) => {
+        console.log('🔄 Инициализация Firebase...');
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                console.log('✅ Пользователь аутентифицирован:', user.uid);
+                resolve(true);
+            } else {
+                try {
+                    const userCredential = await signInAnonymously(auth);
+                    currentUser = userCredential.user;
+                    console.log('✅ Анонимный пользователь создан:', currentUser.uid);
+                    resolve(true);
+                } catch (error) {
+                    console.error('❌ Ошибка аутентификации:', error);
+                    reject(error);
+                }
+            }
+        });
+    });
+}
+
 // Локальное хранилище данных
 let appData = {
     parentPassword: '1234',
@@ -2018,5 +2066,6 @@ async function checkFirebaseSetup() {
 }
 
 // Вызовите в консоли: checkFirebaseSetup()
+
 
 console.log('Script.js загружен успешно');
