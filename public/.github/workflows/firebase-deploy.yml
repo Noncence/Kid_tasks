@@ -1,0 +1,44 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
+      
+    - name: Create firebase config
+      run: |
+        echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KID_TASKS }}' > firebase-service-account.json
+        echo '{
+          "hosting": {
+            "public": "public",
+            "ignore": ["firebase-debug.log", "firebase-debug.*.log"],
+            "rewrites": [
+              {
+                "source": "**",
+                "destination": "/index.html"
+              }
+            ]
+          }
+        }' > firebase.json
+        
+    - name: Deploy to Firebase
+      run: |
+        firebase use kid-tasks-95211 --token "$FIREBASE_TOKEN" || firebase use --add kid-tasks-95211
+        firebase deploy --only hosting --token "$FIREBASE_TOKEN"
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KID_TASKS }}
