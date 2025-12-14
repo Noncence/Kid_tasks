@@ -332,6 +332,7 @@ body {
 
 .child-level {
     font-size: 14px;
+    font-weight: 800;
     opacity: 0.9;
     display: flex;
     align-items: center;
@@ -428,33 +429,16 @@ body {
 }
 
 .status-value {
-    font-weight: 600;
+    font-weight: 600;   
 }
 
 .status-value.online {
     color: #5A9;
     text-shadow: 1px 1px 2px rgba(163, 163, 163, 0.2);
     display: flex;
-    align-items: center;
+    align-items: left;
+    font-size: 14px;
     gap: 5px;
-}
-
-.status-value.online::before {
-    content: '🟢';
-    font-size: 12px;
-}
-
-.status-value.offline {
-    color: #A55;
-    text-shadow: 1px 1px 2px rgba(163, 163, 163, 0.2);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.status-value.offline::before {
-    content: '🔴';
-    font-size: 12px;
 }
 
 .btn-logout {
@@ -483,7 +467,7 @@ body {
 /* Основной контент */
 .child-main, .parent-main {
     padding: 24px 20px;
-    padding-bottom: 100px;
+    padding-bottom: 50px;
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
@@ -636,6 +620,101 @@ body {
     position: relative;
 }
 
+/* Добавьте в styles.css */
+.loading-dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60% { content: '...'; }
+    80%, 100% { content: ''; }
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Стили для заблокированной кнопки */
+.btn-primary:disabled {
+    opacity: 0.7 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+}
+
+/* Стили для заблокированных элементов */
+#taskModal input:disabled,
+#taskModal button:disabled,
+#taskModal textarea:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+}
+
+
+/* Бейдж вложений */
+.attachments-badge {
+    position: absolute;
+    top: 52px;
+    right: 14px;
+    background: var(--sticky-blue);
+    border: 2px solid var(--wood-border);
+    color: var(--text-dark);
+    padding: 8px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+    box-shadow: var(--shadow-sticky);
+}
+
+
+/* Контейнер для вложений */
+.attachment-item {
+    position: relative;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid var(--wood-border);
+    border-radius: 10px;
+    background: var(--bg-secondary);
+}
+
+/* Информация о вложении */
+.attachment-info {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 5px;
+    text-align: center;
+}
+
+/* Сообщение об отсутствии вложений */
+.no-attachments {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Улучшенное отображение изображений */
+.attachment-item img {
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Индикатор загрузки */
+.attachment-loading {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-light);
+}
+
 .revision-badge {
     position: absolute;
     top: 12px;
@@ -713,10 +792,10 @@ body {
     background: var(--sticky-orange);
     border: 2px solid var(--wood-border);
     color: var(--text-dark);
-    padding: 10px 14px;
+    padding: 8px 10px;
     border-radius: 15px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 14px;
     transition: all 0.3s ease;
     z-index: 2;
     box-shadow: var(--shadow-sticky);
@@ -780,7 +859,7 @@ body {
 
 /* Статистика */
 .stats-section {
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 .stats-grid {
@@ -833,80 +912,726 @@ body {
     font-weight: 600;
 }
 
-/* Банка с печеньем для прогресса */
-.cookie-jar-container {
-    margin: 30px auto;
-    text-align: center;
-    max-width: 200px;
-}
+/* Стили для копилки */
 
-.cookie-jar {
+.piggy-bank {
     width: 120px;
-    height: 180px;
-    margin: 0 auto 15px;
+    height: 140px;
+    margin: 0 auto;
     position: relative;
     border: 4px solid var(--wood-border);
-    border-radius: 15px 15px 25px 25px;
-    background: var(--bg-warm-white);
+    border-radius: 60px 60px 50px 50px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
     box-shadow: var(--shadow-sticky);
     overflow: hidden;
 }
 
-.cookie-jar::before {
+.piggy-bank::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 20px;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 12px;
     background: var(--wood-border);
-    border-radius: 10px 10px 0 0;
+    border-radius: 50%;
     z-index: 2;
 }
 
-.cookie-jar-fill {
+.piggy-bank::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 4px;
+    background: var(--wood-border);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.piggy-bank:hover {
+    transform: scale(1.05) rotate(-2deg);
+    box-shadow: var(--shadow-sticky-hover);
+}
+
+
+.piggy-bank-section {
+    background: var(--sticky-yellow);
+    border: 3px solid var(--wood-border);
+    border-radius: 20px;
+    padding: 25px;
+    margin: 20px 0;
+    box-shadow: var(--shadow-sticky);
+    text-align: center;
+}
+
+.piggy-bank-label-top {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 2px rgba(93, 64, 55, 0.1);
+    display: block;
+}
+
+.piggy-bank-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.piggy-bank-container {
+    margin: 0;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.piggy-bank-container:hover {
+    transform: scale(1.05);
+}
+
+.piggy-bank-amount {
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.piggy-bank-amount:hover {
+    transform: scale(1.05);
+}
+
+.piggy-bank-fill {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(180deg, #8D6E63 0%, #A1887F 50%, #BCAAA4 100%);
-    transition: height 0.5s ease;
-    border-radius: 0 0 20px 20px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 10px;
-    overflow: hidden;
+    background: linear-gradient(180deg, #C0C0C0 0%, #A9A9A9 50%, #808080 100%);
+    transition: height 1s ease;
+    border-radius: 0 0 45px 45px;
 }
 
-.cookie-jar-fill::before {
-    content: '🍪';
-    font-size: 24px;
-    animation: cookieFloat 2s ease-in-out infinite;
-    filter: drop-shadow(1px 1px 2px rgba(93, 64, 55, 0.3));
-}
-
-.cookie-jar-fill::after {
-    content: '🍪 🍪 🍪';
+.piggy-coins {
     position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 16px;
-    opacity: 0.8;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
 }
 
-@keyframes cookieFloat {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-5px) rotate(5deg); }
+.piggy-coin {
+    position: absolute;
+    font-size: 18px;
+    animation: coinSparkle 2s ease-in-out infinite;
+    filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+    z-index: 3;
 }
 
-.cookie-jar-label {
+
+@keyframes coinSparkle {
+    0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.3));
+    }
+    50% { 
+        transform: scale(1.1) rotate(5deg);
+        filter: drop-shadow(0 0 8px gold);
+    }
+}
+
+.piggy-bank-label {
     font-size: 16px;
     font-weight: 700;
     color: var(--text-dark);
     margin-top: 10px;
     text-shadow: 1px 1px 2px rgba(93, 64, 55, 0.1);
+}
+
+.piggy-bank-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.piggy-stat {
+    background: var(--sticky-yellow);
+    border: 2px solid var(--wood-border);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: var(--shadow-sticky);
+}
+
+.piggy-stat-value {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.piggy-stat-label {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.piggy-bank-main-stat {
+    background: var(--sticky-yellow);
+    border: 3px solid var(--wood-border);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    margin-top: 15px;
+    box-shadow: var(--shadow-sticky);
+    transition: all 0.3s ease;
+    animation: pulse 3s ease-in-out infinite;
+}
+
+.piggy-bank-main-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sticky-hover);
+}
+
+.piggy-main-value {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(93, 64, 55, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.piggy-main-value::before {
+    content: '💰';
+    font-size: 42px;
+    filter: drop-shadow(1px 1px 2px rgba(93, 64, 55, 0.2));
+    animation: coinBounce 3s ease-in-out infinite;
+}
+
+.piggy-main-label {
+    font-size: 16px;
+    color: var(--text-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Уведомление о начислении денег */
+.money-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    z-index: 5000;
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.money-notification.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.money-notification-content {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border: 3px solid var(--wood-border);
+    border-radius: 20px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: var(--shadow-sticky-hover);
+    animation: moneyBounce 0.6s ease;
+}
+
+@keyframes moneyBounce {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.money-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+    animation: coinFlip 1s ease;
+}
+
+@keyframes coinFlip {
+    0% { transform: rotateY(0deg) scale(0); }
+    50% { transform: rotateY(180deg) scale(1.2); }
+    100% { transform: rotateY(360deg) scale(1); }
+}
+
+.money-text {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.money-subtext {
+    font-size: 14px;
+    color: var(--text-dark);
+    opacity: 0.9;
+}
+
+/* Стили для информации о копилке на странице родителя */
+.child-piggy-info {
+    margin: 20px 0 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.piggy-info-card {
+    background: linear-gradient(135deg, var(--sticky-yellow), var(--sticky-orange));
+    border: 3px solid var(--wood-border);
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow-sticky);
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.piggy-info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sticky-hover);
+}
+
+.piggy-info-icon {
+    font-size: 60px;
+    filter: drop-shadow(2px 2px 4px rgba(93, 64, 55, 0.2));
+    animation: coinBounce 3s ease-in-out infinite;
+}
+
+@keyframes coinBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-5px) rotate(5deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    75% { transform: translateY(-3px) rotate(-3deg); }
+}
+
+.piggy-info-content {
+    flex: 1;
+}
+
+.piggy-info-amount {
+    font-size: 48px;
+    font-weight: 800;
+    text-align: center;
+    margin-right: 50px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 2px rgba(93, 64, 55, 0.1);
+}
+
+.piggy-info-label {
+    font-size: 14px;
+    text-align: center;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 15px;
+    margin-right: 50px;
+}
+
+.piggy-info-progress {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 12px;
+    background: var(--bg-warm-white);
+    border: 2px solid var(--wood-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 2px 2px 5px rgba(93, 64, 55, 0.1);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FFD700, #FFA500);
+    border-radius: 8px;
+    transition: width 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.progress-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dark);
+    min-width: 70px;
+}
+
+/* Стили для управления копилкой */
+/* Убедимся, что все модальные окна одинаковые */
+#managePiggyModal {
+    z-index: 2000; /* Такой же как у других модальных окон */
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+#managePiggyModal .modal-content {
+    z-index: 2001;
+}
+
+.piggy-management-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.new-amount-preview {
+    background: var(--sticky-yellow);
+    border: 3px solid var(--wood-border);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: var(--shadow-sticky);
+}
+
+.preview-label {
+    font-size: 16px;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.preview-value {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(93, 64, 55, 0.1);
+}
+
+.amount-controls {
+    background: var(--sticky-blue);
+    border: 3px solid var(--wood-border);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: var(--shadow-sticky);
+}
+
+.amount-input-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-amount-control {
+    background: var(--bg-button);
+    border: 3px solid var(--wood-border);
+    color: var(--text-dark);
+    padding: 15px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sticky);
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.btn-amount-control:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sticky-hover);
+}
+
+.btn-amount-control.plus:hover {
+    background: var(--bg-olive);
+}
+
+.btn-amount-control.minus:hover {
+    background: var(--bg-terracotta);
+    color: white;
+}
+
+.btn-icon {
+    font-size: 20px;
+}
+
+.btn-text {
+    font-size: 14px;
+}
+
+.amount-input {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 10px;
+    flex: 1;
+    max-width: 200px;
+    background: var(--bg-warm-white);
+    border: 3px solid var(--wood-border);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.comment-section {
+    background: var(--sticky-pink);
+    border: 3px solid var(--wood-border);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: var(--shadow-sticky);
+}
+
+.comment-section label {
+    display: block;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.comment-section textarea {
+    background: var(--bg-warm-white);
+    border: 2px solid var(--wood-border);
+    border-radius: 15px;
+    font-size: 15px;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.management-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.management-actions .btn-reject,
+.management-actions .btn-approve {
+    flex: 1;
+    padding: 18px;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sticky);
+    border: 3px solid var(--wood-border);
+}
+
+.management-actions .btn-reject {
+    background: var(--bg-terracotta);
+    color: white;
+}
+
+.management-actions .btn-approve {
+    background: var(--bg-olive);
+    color: var(--text-dark);
+}
+
+.management-actions .btn-reject:hover,
+.management-actions .btn-approve:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sticky-hover);
+}
+
+.management-actions .btn-reject:hover {
+    background: #d32f2f;
+}
+
+.management-actions .btn-approve:hover {
+    background: #7CB342;
+}
+
+/* Стили для уведомления о копилке в стиле других money-уведомлений */
+.money-comment {
+    background: rgba(255, 255, 255, 0.3);
+    border: 2px solid var(--wood-border);
+    border-radius: 12px;
+    padding: 15px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.comment-text {
+    color: var(--text-dark);
+    font-size: 15px;
+    line-height: 1.5;
+    font-weight: 600;
+    white-space: pre-wrap;
+}
+
+.money-amount {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 10px 0;
+    padding: 8px 20px;
+    border-radius: 12px;
+    border: 2px solid var(--wood-border);
+    display: inline-block;
+}
+
+.money-amount.positive {
+    background: var(--sticky-green);
+    color: var(--text-dark);
+}
+
+.money-amount.negative {
+    background: var(--sticky-pink);
+    color: var(--text-dark);
+}
+
+/* Улучшенные стили для секции запросов на вывод */
+.withdrawal-requests-section {
+    margin: 20px 0;
+    margin-bottom: 5px;
+    padding: 25px;
+    background: var(--sticky-blue);
+    border: 3px solid var(--wood-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sticky);
+}
+
+.withdrawal-requests-section .section-title {
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.withdrawal-request-card {
+    background: var(--bg-warm-white);
+    border: 2px solid var(--wood-border);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: var(--shadow-sticky);
+    transition: all 0.3s ease;
+}
+
+.withdrawal-request-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sticky-hover);
+}
+
+.request-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.request-amount {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.request-amount::before {
+    content: '💰';
+    font-size: 20px;
+}
+
+.request-date {
+    font-size: 13px;
+    color: var(--text-light);
+    background: var(--sticky-yellow);
+    padding: 4px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--wood-border);
+}
+
+.request-child {
+    font-size: 15px;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.request-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.request-actions .btn-approve,
+.request-actions .btn-reject {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sticky);
+}
+
+.request-actions .btn-approve {
+    background: var(--bg-olive);
+    color: var(--text-dark);
+    border: 2px solid var(--wood-border);
+}
+
+.request-actions .btn-reject {
+    background: var(--bg-terracotta);
+    color: white;
+    border: 2px solid var(--wood-border);
+}
+
+.request-actions .btn-approve:hover {
+    background: #7CB342;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sticky-hover);
+}
+
+.request-actions .btn-reject:hover {
+    background: #D32F2F;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sticky-hover);
+}
+
+.no-requests {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    padding: 30px;
+    font-size: 16px;
+    background: var(--bg-warm-white);
+    border: 2px dashed var(--wood-border);
+    border-radius: 15px;
 }
 
 /* Плавающая кнопка */
@@ -1389,6 +2114,196 @@ body {
     background: #d32f2f;
 }
 
+/* Контейнер элемента бэкапа */
+.backup-item {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 2px solid var(--wood-border);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.backup-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Заголовок бэкапа */
+.backup-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.backup-item-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--text-dark);
+}
+
+.backup-item-date {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+/* Статистика бэкапа */
+.backup-item-stats {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.stat-badge {
+    background: var(--sticky-pink);
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--text-dark);
+    border: 1px solid var(--wood-border);
+}
+
+/* Действия с бэкапом */
+.backup-item-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.btn-backup-action {
+    flex: 1;
+    padding: 8px;
+    border: 2px solid var(--wood-border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btn-backup-restore {
+    background: var(--sticky-blue);
+    color: var(--text-dark);
+}
+
+.btn-backup-download {
+    background: var(--sticky-green);
+    color: var(--text-dark);
+}
+
+.btn-backup-delete {
+    background: var(--sticky-pink);
+    color: var(--text-dark);
+}
+
+.btn-backup-action:hover {
+    opacity: 0.9;
+    transform: scale(0.98);
+}
+
+/* Индикатор типа бэкапа */
+.backup-type-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.backup-type-manual {
+    background: #4CAF50;
+    color: white;
+}
+
+.backup-type-auto {
+    background: #2196F3;
+    color: white;
+}
+
+/* Индикатор источника */
+.backup-source-indicator {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    background: #FF9800;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 10px;
+    z-index: 1;
+}
+
+/* Анимации */
+@keyframes backupPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.backup-creating {
+    animation: backupPulse 1s infinite;
+}
+
+/* Пагинация */
+.pagination-btn {
+    padding: 5px 10px;
+    border: 1px solid var(--wood-border);
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover {
+    background: var(--sticky-blue);
+}
+
+.pagination-btn.active {
+    background: var(--sticky-blue);
+    font-weight: bold;
+}
+
+/* Состояния загрузки */
+.backup-loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+}
+
+.backup-loading::after {
+    content: '...';
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* Уведомления */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
 /* Полноэкранный просмотр изображений */
 .fullscreen-modal {
     position: fixed;
@@ -1474,6 +2389,98 @@ body {
     box-shadow: var(--shadow-sticky-hover);
 }
 
+/* Стили для сообщения об отсутствии интернета */
+.no-internet-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+}
+
+.no-internet-content {
+    background: var(--bg-warm-white);
+    border: 3px solid var(--wood-border);
+    border-radius: 25px;
+    padding: 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: var(--shadow-sticky-hover);
+    animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.no-internet-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+}
+
+.no-internet-content h2 {
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.no-internet-content p {
+    color: var(--text-light);
+    margin-bottom: 25px;
+    font-size: 16px;
+}
+
+.no-internet-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.no-internet-actions .btn-primary,
+.no-internet-actions .btn-reject {
+    padding: 12px 24px;
+    border-radius: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid var(--wood-border);
+    flex: 1;
+}
+
+.no-internet-actions .btn-primary {
+    background: var(--bg-olive);
+    color: var(--text-dark);
+}
+
+.no-internet-actions .btn-reject {
+    background: var(--bg-terracotta);
+    color: white;
+}
+
+/* Индикатор статуса подключения в шапке */
+.connection-status {
+    background: var(--sticky-orange);
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-left: 10px;
+    font-weight: 600;
+    border: 1px solid var(--wood-border);
+}
+
+.connection-status.online {
+    background: var(--bg-olive);
+    display: none; /* Скрываем когда онлайн */
+}
+
+.connection-status.offline {
+    background: var(--bg-terracotta);
+    color: white;
+}
+
 /* Адаптивность для мобильных */
 @media (max-width: 768px) {
     .start-container {
@@ -1500,7 +2507,7 @@ body {
 
     .child-main, .parent-main {
         padding: 15px;
-        padding-bottom: 100px;
+        padding-bottom: 40px;
     }
 
     .tasks-list {
@@ -1513,8 +2520,65 @@ body {
 
     .modal-content {
         margin: 10% auto;
-        padding: 20px;
+        z-index: 9999;
+        padding: 15px;
         width: 95%;
+    }
+
+    .piggy-main-value {
+    font-size: 32px;
+    }
+
+    .piggy-info-amount {
+    font-size: 28px;
+    }
+
+    /* Убедимся что карточка не выходит за границы */
+    .task-card {
+        overflow: hidden;
+    }
+
+
+    .attachments-container {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .attachment-item {
+        max-width: 100%;
+        margin: 10px 0;
+        padding: 8px;
+    }
+
+    /* Responsive изображения */
+    .attachment-item img {
+        max-width: 100%;
+        height: auto;
+        max-height: 50vh;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .attachment-item video {
+        max-width: 100%;
+        height: auto;
+        max-height: 50vh;
+        display: block;
+        margin: 0 auto;
+    }
+
+    /* Горизонтальный скролл для множественных вложений */
+    .attachments-grid {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 10px 0;
+    }
+
+    .attachments-grid .attachment-item {
+        flex: 0 0 auto;
+        min-width: 250px;
+        max-width: 300px;
     }
 
     .floating-btn {
@@ -1538,6 +2602,98 @@ body {
     .attachment-item {
         margin: 5px 5px 5px 0;
     }
+    .piggy-management-form {
+        gap: 20px;
+    }
+    
+    .new-amount-preview {
+        padding: 20px;
+    }
+    
+    .preview-value {
+        font-size: 36px;
+    }
+    
+    .amount-controls {
+        padding: 20px;
+    }
+    
+    
+    
+    .btn-amount-control {
+        width: 100%;
+        min-width: auto;
+        padding: 18px 15px;
+    }
+    
+    .amount-input {
+        max-width: 100%;
+        margin: 0;
+       
+    }
+    
+    .btn-text {
+        font-size: 16px;
+    }
+    
+    .comment-section {
+        padding: 20px;
+    }
+    
+    .management-actions {
+        flex-direction: column;
+    }
+    
+    .management-actions .btn-reject,
+    .management-actions .btn-approve {
+        padding: 16px;
+    }
+    
+    /* Адаптивность для уведомлений */
+      
+    .money-icon {
+        font-size: 50px;
+    }
+    
+    .money-text {
+        font-size: 20px;
+    }
+    
+    .money-amount {
+        font-size: 24px;
+        padding: 6px 15px;
+    }
+    
+    .money-comment {
+        padding: 12px;
+    }
+    
+    .comment-text {
+        font-size: 14px;
+    }
+
+    .backup-actions {
+        flex-direction: column !important;
+    }
+    
+    .backup-actions button {
+        width: 100% !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .backup-item-actions {
+        flex-direction: column;
+    }
+    
+    .backup-item-actions button {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
+
+/* Стиль для уведомлений бэкапов */
+.backup-notification.info {
+    background: #2196F3 !important;
 }
 
 @media (max-width: 480px) {

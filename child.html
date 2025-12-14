@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>Мои задания</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="child-page">
         <header class="child-header">
             <button class="btn-logout" onclick="logout()" title="Выйти">🚪</button>
-            <!-- <button class="btn-back" onclick="goHome()"><<</button> -->
+
             <div class="header-info">
                 <div class="avatar-container">
                     <img src="" alt="Аватар" id="childAvatar" class="avatar" style="display: none;">
@@ -50,25 +50,36 @@
             </section>
 
             <section class="stats-section">
-                <h2 class="section-title">Статистика</h2>
-                <div class="cookie-jar-container">
-                    <div class="cookie-jar">
-                        <div class="cookie-jar-fill" id="cookieJarFill" style="height: 0%;"></div>
+                <h2 class="section-title">Моя копилка</h2>
+                <div class="piggy-bank-section">
+                    <div class="piggy-bank-label-top">Нажмите для вывода</div>
+                    <div class="piggy-bank-row">
+                        <div class="piggy-bank-container" onclick="requestWithdrawal()">
+                            <div class="piggy-bank">
+                                <div class="piggy-bank-fill" id="piggyBankFill" style="height: 0%;"></div>
+                                <div class="piggy-coins" id="piggyBankCoins"></div>
+                            </div>
+                        </div>
+                        <div class="piggy-bank-amount" onclick="requestWithdrawal()">
+                            <div class="piggy-main-value" id="piggyBankAmount">0₽</div>
+                            <div class="piggy-main-label">В копилке</div>
+                        </div>
                     </div>
-                    <div class="cookie-jar-label">Моя банка с печеньем 🍪</div>
                 </div>
+                
+                <h2 class="section-title" style="margin-top: 40px;">Моя статистика</h2>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-value" id="totalCompleted">0</div>
-                        <div class="stat-label">Выполнено</div>
+                        <div class="stat-value" id="currentLevel">1</div>
+                        <div class="stat-label">Уровень</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="totalPoints">0</div>
                         <div class="stat-label">Баллов</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="currentLevel">1</div>
-                        <div class="stat-label">Уровень</div>
+                        <div class="stat-value" id="totalCompleted">0</div>
+                        <div class="stat-label">Выполнено</div>
                     </div>
                 </div>
             </section>
@@ -158,12 +169,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    
-    <!-- Твои файлы Firebase -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="firebase-config.js"></script>
     <script src="firebase-app.js"></script>
     <script src="script.js"></script>
 </body>
-
 </html>
-

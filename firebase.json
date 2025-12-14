@@ -2,8 +2,9 @@
   "hosting": {
     "public": "public",
     "ignore": [
-      "firebase-debug.log",
-      "firebase-debug.*.log"
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
     ],
     "rewrites": [
       {
@@ -11,5 +12,16 @@
         "destination": "/index.html"
       }
     ]
+  },
+  "emulators": {
+    "dataconnect": {
+      "dataDir": "dataconnect/.dataconnect/pgliteData"
+    }
+  },
+  "firestore": {
+    "database": "(default)",
+    "location": "europe-central2",
+    "rules": "firestore.rules",
+    "indexes": "n"
   }
 }

@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>Панель родителя</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="parent-page">
         <header class="parent-header">
-        <button class="btn-back" onclick="goHome()"><<</button>
+        <button class="btn-logout" onclick="logout()" title="Выйти">🚪</button>
+        <!-- <button class="btn-back" onclick="goHome()"><<</button> -->
         <div class="header-status">
             <div class="status-item">
                 <span class="status-label">Задания на проверке:</span>
                 <span class="status-value" id="reviewCount">0</span>
             </div>
             <div class="status-item">
-                <span class="status-label">Ребенок:</span>
-                <span class="status-value online" id="childStatus">Онлайн</span>
+                <span class="status-label">Был в сети:</span>
+                <span class="status-value online" id="childStatus"></span>
             </div>
         </div>
         <div style="display: flex; gap: 10px;">
@@ -45,33 +46,95 @@
             </button>
             </section>
 
+            <!-- В parent.html ЗАМЕНИТЕ эту секцию: -->
             <section class="stats-section">
                 <h2 class="section-title">Статистика ребенка</h2>
-                <div class="cookie-jar-container">
-                    <div class="cookie-jar">
-                        <div class="cookie-jar-fill" id="parentCookieJarFill" style="height: 0%;"></div>
+                
+                <!-- НОВАЯ СЕКЦИЯ КОПИЛКИ -->
+                <div class="child-piggy-info">
+                <div class="piggy-info-card" onclick="openManagePiggyModal()" style="cursor: pointer;">
+                    <div class="piggy-info-icon">💰</div>
+                    <div class="piggy-info-content">
+                        <div class="piggy-info-amount" id="parentPiggyAmount">0₽</div>
+                        <div class="piggy-info-label">В копилке у ребенка</div>
+                        <div class="piggy-info-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="parentPiggyProgress" style="width: 0%;"></div>
+                            </div>
+                            <div class="progress-text" id="parentPiggyProgressText">0/1000₽</div>
+                        </div>
                     </div>
-                    <div class="cookie-jar-label">Банка с печеньем 🍪</div>
                 </div>
+            </div>
+
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="parentTotalCompleted">0</div>
-                        <div class="stat-label">Выполнено</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="parentTotalPoints">0</div>
-                        <div class="stat-label">Баллов</div>
-                    </div>
                     <div class="stat-card">
                         <div class="stat-value" id="parentCurrentLevel">1</div>
                         <div class="stat-label">Уровень</div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="parentTotalPoints">0</div>
+                        <div class="stat-label">Баллов</div>
+                    </div> <div class="stat-card">
+                        <div class="stat-value" id="parentTotalCompleted">0</div>
+                        <div class="stat-label">Выполнено</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ДОБАВЬТЕ эту секцию после статистики: -->
+            <h2 class="section-title" style="margin: 20px 20px;">Запросы на вывод</h2>
+            <section class="withdrawal-requests-section">
+                <div id="withdrawalRequests">
+                    <div class="no-requests">Нет активных запросов на вывод</div>
                 </div>
             </section>
         </main>
 
         <button class="floating-btn" onclick="openAddTaskModal()">+</button>
     </div>
+
+     <!-- Модальное окно управления копилкой -->
+            <div id="managePiggyModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeManagePiggyModal()">&times;</span>
+                    <h2>💰 Управление копилкой</h2>
+                    <div class="piggy-management-form">
+                        <!-- Контейнер с новой суммой -->
+                        <div class="new-amount-preview">
+                            <div class="preview-label">Новая сумма в копилке:</div>
+                            <div class="preview-value" id="newAmountPreview">0₽</div>
+                        </div>
+                        
+                        <!-- Контейнер изменения суммы -->
+                        <div class="amount-controls">
+                            <div class="amount-input-section">
+                                <button class="btn-amount-control minus" onclick="changeAmount(-10)">
+                                    <span class="btn-icon">➖</span>
+                                
+                                </button>
+                                <input type="number" id="piggyAmountChange" class="input-field amount-input" value="0">
+                                <button class="btn-amount-control plus" onclick="changeAmount(10)">
+                                    <span class="btn-icon">➕</span>
+                                    
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Контейнер с комментарием -->
+                        <div class="comment-section">
+                            <label for="piggyComment">Комментарий для ребенка:</label>
+                            <textarea id="piggyComment" class="input-field" rows="3" placeholder="Напишите причину изменения суммы..."></textarea>
+                        </div>
+                        
+                        <!-- Кнопки управления -->
+                        <div class="management-actions">
+                            <button class="btn-reject" onclick="closeManagePiggyModal()">❌ Отмена</button>
+                            <button class="btn-approve" onclick="savePiggyChanges()">✅ Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     <!-- Модальное окно добавления задания -->
     <div id="addTaskModal" class="modal">
@@ -142,10 +205,13 @@
             <span class="close" onclick="closeParentSettingsModal()">&times;</span>
             <h2>Настройки</h2>
             <div class="settings-form">
+                <div class="reset-section" style="margin: 5px 0 5px 0; padding: 10px; background: var(--bg-olive); border-radius: 10px; border: 2px solid var(--wood-border);">
+                    <h3 style="margin-bottom: 10px; color: var(--text-dark);">Смена пароля для входа:</h3>
                 <label>Новый пароль:</label>
                 <input type="password" id="newPassword" class="input-field" placeholder="Введите новый пароль">
-                <button onclick="saveParentSettings()" class="btn-primary">Сохранить пароль</button>
-                <div class="reset-section" style="margin: 20px 0; padding: 15px; background: var(--sticky-pink); border-radius: 10px; border: 2px solid var(--wood-border);">
+                <button onclick="saveParentSettings()" class="btn-primary" style="margin-bottom: 5px; margin-top: 0px;"">Сохранить пароль</button>
+                </div>
+                <div class="reset-section" style="margin: 5px 0 5px 0; padding: 10px; background: var(--sticky-pink); border-radius: 10px; border: 2px solid var(--wood-border);">
                     <h3 style="margin-bottom: 15px; color: var(--text-dark);">Сброс статистики ребенка</h3>
                     
                     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
@@ -161,18 +227,110 @@
                         🗑️ Полный сброс статистики
                     </button>
                     
-                    <div style="font-size: 12px; color: var(--text-light); margin-top: 10px;">
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 5px;">
                         Текущие: Уровень ${appData.child.level}, ${appData.child.points} очков
                     </div>
                 </div>
-                <button type="button" onclick="cleanupStorage()" class="btn-reject" style="margin-top: 10px;">
-                    🗑️ Очистить старые вложения
+              
+                        <!-- Секция бэкапа данных -->
+                <div class="backup-section" style="margin: 5px 0 5px 0; padding: 15px; background: var(--sticky-blue); border-radius: 10px; border: 2px solid var(--wood-border);">
+                    <h3 style="margin-bottom: 15px; color: var(--text-dark); display: flex; align-items: center; gap: 10px;">
+                        <span>📦</span>
+                        <span>Управление бэкапами</span>
+                    </h3>
+                    
+                    <!-- Кнопка создания бэкапа -->
+                    <button onclick="createBackup()" class="btn-primary" style="width: 100%; margin-bottom: 15px; padding: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <span style="font-size: 20px;">💾</span>
+                        <span>Создать бэкап сейчас</span>
+                    </button>
+                    
+                    <!-- Кнопка управления бэкапами -->
+                    <button onclick="showBackupManager()" class="btn-primary" style="width: 100%; margin-top: 20px; padding: 15px; background: var(--bg-terracotta); display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <span style="font-size: 20px;">📂</span>
+                        <span>Управление бэкапами</span>
+                    </button>
+                    
+                    <!-- Информация о последнем бэкапе -->
+                    <div id="backupInfo" style="font-size: 14px; color: var(--text-dark); margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>📅 Последний бэкап:</span>
+                            <span id="lastBackupTime" style="font-weight: bold;">Не создавался</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>📊 Всего бэкапов:</span>
+                            <span id="totalBackupsCount" style="font-weight: bold;">0</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>💾 Размер бэкапов:</span>
+                            <span id="backupSize" style="font-weight: bold;">0 KB</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Предупреждение -->
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 10px; padding: 10px; background: rgba(255,193,7,0.1); border-radius: 5px; border-left: 3px solid #ffc107;">
+                        ⚠️ Регулярно создавайте бэкапы! Сохраняйте файлы .json на компьютер.
+                    </div>
+                </div>
+                <button type="button" onclick="cleanupStorage()" class="btn-reject" style="width: 100%; margin-top: 0px;">
+                    🗑️ Очистить базу данных!
                 </button>
-                <button class="btn-logout" onclick="logout()" title="Выйти">🚪Выход</button>
+                <div style="font-size: 12px; color: var(--text-light); margin-top: 1px; margin-bottom: 20px;">
+                    Удалит все прикрепленные файлы из облачного хранилища
+                </div>
+                <button class="btn-logout" onclick="exitApp()" title="Выйти">🚪Выход</button>
             </div>
         </div>
     </div>
-  
+    <!-- Модальное окно управления бэкапами -->
+    <div id="backupManagerModal" class="modal">
+        <div class="modal-content" style="max-width: 700px; max-height: 80vh; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                    <span>📂</span>
+                    <span>Управление бэкапами</span>
+                </h2>
+                <span class="close" onclick="closeBackupManager()" style="font-size: 28px;">&times;</span>
+            </div>
+            
+            <!-- Фильтры и поиск -->
+            <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+                <input type="text" id="backupSearch" placeholder="🔍 Поиск по дате..." class="input-field" 
+                    style="flex: 1; padding: 8px 12px;" oninput="filterBackups()">
+                <select id="backupFilter" class="input-field" style="width: 150px; padding: 8px 12px;" onchange="filterBackups()">
+                    <option value="all">Все бэкапы</option>
+                    <option value="manual">Ручные</option>
+                    <option value="auto">Автоматические</option>
+                </select>
+            </div>
+            
+            <!-- Список бэкапов -->
+            <div id="backupsList" style="flex: 1; overflow-y: auto; border: 1px solid var(--wood-border); border-radius: 8px; padding: 10px; background: rgba(255,255,255,0.5);">
+                <!-- Список будет заполняться JavaScript -->
+            </div>
+            
+            <!-- Пагинация -->
+            <div id="backupPagination" style="display: flex; justify-content: center; gap: 5px; margin: 15px 0;">
+                <!-- Кнопки пагинации будут здесь -->
+            </div>
+            
+            <!-- Действия -->
+            <div class="backup-actions" style="display: flex; gap: 10px; padding-top: 15px; border-top: 1px solid var(--wood-border);">
+                <button onclick="createBackup()" class="btn-primary" style="flex: 1; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>💾</span>
+                    <span>Новый бэкап</span>
+                </button>
+                <button onclick="importBackups()" class="btn-primary" style="flex: 1; padding: 12px; background: var(--sticky-green); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>📤</span>
+                    <span>Импорт из файла</span>
+                </button>
+                <button onclick="cleanupOldBackups()" class="btn-reject" style="flex: 1; padding: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>🧹</span>
+                    <span>Очистить старые</span>
+                </button>
+            </div>
+        </div>
+    </div>
  <script>
     // Защита родительской страницы - требует пароль
     document.addEventListener('DOMContentLoaded', function() {
@@ -184,13 +342,11 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    
-    <!-- Твои файлы Firebase -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="firebase-config.js"></script>
     <script src="firebase-app.js"></script>
     <script src="script.js"></script>
     
 </body>
-
 </html>
-
